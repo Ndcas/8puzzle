@@ -1,0 +1,42 @@
+/* result.css — matches header palette */
+.result-panel {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  background: #ffffff;
+  border-radius: 16px;
+  border-top: 4px solid var(--gold);
+  box-shadow: 0 4px 24px rgba(26,58,107,0.10);
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.result-panel h2 {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--blue-dark);
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--gold);
+  margin-bottom: 4px;
+}
+
+.result-panel p {
+  font-size: 0.88rem;
+  color: #2d4a72;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 5px 0;
+  border-bottom: 1px solid #eaf0f9;
+}
+
+.result-panel p:last-child {
+  border-bottom: none;
+}
+
+.result-panel p strong {
+  color: var(--blue-dark);
+  font-weight: 600;
+}

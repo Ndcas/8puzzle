@@ -1,0 +1,140 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --blue-dark:#1A3A6B;
+  --blue-main:#1F5CA9;
+  --blue-sky:#00AFEF;
+  --gold:#F5C518;
+  --gold-soft:#FFD966;
+  --white:#FFFFFF;
+  --white-80:rgba(255,255,255,0.80);
+  --white-50:rgba(255,255,255,0.50);
+  --white-15:rgba(255,255,255,0.15);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+.header{
+  position:relative;
+  font-family:'Be Vietnam Pro',sans-serif;
+  background:linear-gradient(118deg,var(--blue-dark) 0%,var(--blue-main) 55%,#1870c8 100%);
+  color:var(--white);
+  width:100%;
+}
+
+.header-top{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:30px;
+  padding:18px 60px 16px;
+  width:100%;
+  max-width:1700px;
+  margin:0 auto;
+}
+
+.header-identity{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+
+.header-identity::before{
+  content:'';
+  width:50px;
+  height:3px;
+  background:linear-gradient(90deg,var(--gold),var(--gold-soft));
+  border-radius:2px;
+  margin-bottom:10px;
+}
+
+.header-univ{
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:0.20em;
+  text-transform:uppercase;
+  color:var(--gold-soft);
+}
+
+.header-school{
+  font-size:17px;
+  font-weight:700;
+  color:var(--white);
+  line-height:1.35;
+}
+
+.header-dept{
+  font-size:12.5px;
+  font-weight:400;
+  color:var(--white-80);
+  letter-spacing:0.03em;
+}
+
+.header-logos{
+  display:flex;
+  align-items:center;
+  gap:18px;
+  flex-shrink:0;
+}
+
+.header-logo-img{
+  object-fit:contain;
+}
+
+.logo-ctu{
+  width:86px;
+  height:86px;
+}
+
+.logo-divider{
+  width:1px;
+  height:70px;
+  background:var(--white-50);
+}
+
+.logo-cit{
+  width:140px;
+  height:60px;
+  object-fit:contain;
+}
+
+.header-divider{
+  height:1px;
+  background:var(--white-15);
+}
+
+.header-title-band{
+  text-align:center;
+  padding:18px 40px 22px;
+}
+
+.header-title-band h1{
+  font-family:'Merriweather',Georgia,serif;
+  font-size:clamp(20px,3vw,30px);
+  font-weight:700;
+  letter-spacing:0.05em;
+  color:var(--white);
+}
+
+.header-subtitle{
+  margin-top:6px;
+  font-size:12px;
+  font-weight:400;
+  letter-spacing:0.16em;
+  text-transform:uppercase;
+  color:var(--white-50);
+}
+
+.header-accent-bar{
+  height:4px;
+  background:linear-gradient(90deg,var(--blue-dark),var(--blue-sky),var(--blue-dark));
+}
+
+@media (max-width:620px){
+  .header-top{padding:14px 20px 12px;gap:12px;}
+  .header-school{font-size:14px;}
+  .logo-ctu{width:60px;height:60px;}
+  .logo-cit{width:95px;height:42px;}
+  .logo-divider{height:46px;}
+}
