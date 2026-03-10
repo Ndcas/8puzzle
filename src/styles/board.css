@@ -1,0 +1,83 @@
+/* board.css — matches header palette */
+.puzzle-board {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.puzzle-board h2 {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--blue-dark);
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--gold);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 66px);
+  grid-template-rows: repeat(3, 66px);
+  gap: 5px;
+}
+
+.cell {
+  width: 66px;
+  height: 66px;
+  background: linear-gradient(135deg, #e8f0fb 0%, #d4e3f7 100%);
+  border: 2px solid var(--blue-main);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--blue-dark);
+  box-shadow: 0 2px 6px rgba(31,92,169,0.15);
+  transition: background 0.18s, box-shadow 0.18s;
+}
+
+.cell.empty {
+  background: #f0f4fa;
+  border: 2px dashed #a0b8d8;
+  box-shadow: none;
+}
+
+/* Editable input inside cell */
+.cell-input {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: transparent;
+  text-align: center;
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--blue-dark);
+  outline: none;
+  cursor: text;
+  -moz-appearance: textfield;
+}
+
+.cell-input::-webkit-outer-spin-button,
+.cell-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.cell-input:focus {
+  background: rgba(245,197,24,0.18);
+  border-radius: 7px;
+}
+
+.board-hint {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-size: 0.70rem;
+  color: #7a96b8;
+  letter-spacing: 0.04em;
+  margin-top: 2px;
+}
