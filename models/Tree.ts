@@ -60,6 +60,20 @@ export default class Tree {
     }
 
     /**
+     * Lấy danh sách tất cả các trạng thái từ nút gốc đến nút hiện tại.
+     * @returns Mảng các State theo đúng thứ tự thực hiện.
+     */
+    public getStates(): State[] {
+        let result = [];
+        let node: Tree | null = this;
+        while (node != null) {
+            result.push(node.state);
+            node = node.parent;
+        }
+        return result.reverse();
+    }
+
+    /**
      * Lấy độ sâu của nút hiện tại.
      * @returns Độ sâu (số bước từ gốc).
      */
