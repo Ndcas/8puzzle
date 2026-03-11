@@ -1,0 +1,101 @@
+/* control.css — matches header palette */
+.control-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  padding: 28px 32px;
+  background: #ffffff;
+  border-radius: 16px;
+  border-top: 4px solid var(--blue-main);
+  box-shadow: 0 4px 24px rgba(26,58,107,0.10);
+}
+
+/* Two boards side by side */
+.boards-row {
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+  align-items: flex-start;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+/* Algorithm select row */
+.control-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.control-row label {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--blue-dark);
+  letter-spacing: 0.03em;
+}
+
+.control-row select {
+  padding: 7px 14px;
+  border: 1.5px solid #a0b8d8;
+  border-radius: 8px;
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-size: 0.88rem;
+  color: var(--blue-dark);
+  background: #f4f8ff;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.control-row select:focus {
+  border-color: var(--blue-main);
+  box-shadow: 0 0 0 3px rgba(31,92,169,0.12);
+}
+
+/* Buttons */
+.button-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.btn {
+  padding: 10px 26px;
+  border: 1.5px solid var(--blue-main);
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--blue-main);
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s;
+  letter-spacing: 0.02em;
+}
+
+.btn:hover {
+  background: #e8f0fb;
+  border-color: var(--blue-dark);
+  color: var(--blue-dark);
+}
+
+.btn.btn-primary {
+  background: linear-gradient(118deg, var(--blue-dark), var(--blue-main));
+  color: var(--white);
+  border-color: transparent;
+  box-shadow: 0 3px 10px rgba(31,92,169,0.25);
+}
+
+.btn.btn-primary:hover {
+  background: linear-gradient(118deg, var(--blue-main), #1870c8);
+  box-shadow: 0 4px 14px rgba(31,92,169,0.35);
+}
+
+@media (max-width: 620px) {
+  .control-panel { padding: 18px 16px; gap: 16px; }
+  .boards-row    { gap: 20px; }
+}
