@@ -4,6 +4,7 @@ export default class Tree {
     private parent: Tree | null;
     private state: State;
     private opCode: OpCodes | null;
+    private depth: number;
 
     /**
      * Khởi tạo một nút mới trong cây tìm kiếm.
@@ -15,6 +16,7 @@ export default class Tree {
         this.parent = parent;
         this.state = state;
         this.opCode = opCode;
+        this.depth = parent == null ? 0 : parent.depth + 1;
     }
 
     /**
@@ -55,6 +57,14 @@ export default class Tree {
             node = node.parent;
         }
         return result.reverse();
+    }
+
+    /**
+     * Lấy độ sâu của nút hiện tại.
+     * @returns Độ sâu (số bước từ gốc).
+     */
+    public getDepth(): number {
+        return this.depth;
     }
 
     /**

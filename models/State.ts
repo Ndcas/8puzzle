@@ -13,8 +13,8 @@ export enum OpCodes {
 export default class State {
     private static readonly POW10: number[] = [1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000];
     private static readonly NUMBERS: Set<number> = new Set([0, 1, 2, 3, 4, 5, 6, 7, 8]);
-    private static readonly GOAL: number = 123804765;
-    private static readonly COORDINATE_MAP: Map<number, Coordinate> = new Map([
+    private static GOAL: number = 123804765;
+    private static COORDINATE_MAP: Map<number, Coordinate> = new Map([
         [0, { x: 1, y: 1 }],
         [1, { x: 0, y: 0 }],
         [2, { x: 0, y: 1 }],
@@ -25,10 +25,54 @@ export default class State {
         [7, { x: 2, y: 0 }],
         [8, { x: 1, y: 0 }],
     ]);
+    private static IS_ODD = true;
     private tiles: number;
     private emptyTile: Coordinate | undefined;
     private euclideanH: number | undefined;
     private manhattanH: number | undefined;
+
+    /**
+     * Cập nhật trạng thái đích mới.
+     * Giải mã số thành mảng 1 chiều, kiểm tra tính hợp lệ và cập nhật IS_ODD dựa trên số nghịch thế.
+     * @param goal Số nguyên 9 chữ số đại diện cho mục tiêu mới.
+     * @note Lưu ý: Các trạng thái (State) được sinh ra trước khi gọi hàm này có thể có giá trị Heuristic sai do COORDINATE_MAP đã thay đổi.
+     * @throws Error nếu trạng thái đích không hợp lệ.
+     */
+    public static updateGoal(goal: number): void {
+        let tiles: number[] = [];
+        for (let i = 0; i < 9; i++) {
+            tiles.push(Math.trunc(goal / State.POW10[8 - i]) % 10);
+        }
+        let numberSet = new Set(tiles);
+        if (numberSet.size != 9) {
+            throw new Error("Trạng thái đích không hợp lệ: Thiếu hoặc thừa chữ số.");
+        }
+        for (let num of State.NUMBERS) {
+            if (!numberSet.has(num)) {
+                throw new Error(`Trạng thái đích không hợp lệ: Thiếu chữ số ${num}.`);
+            }
+        }
+        let oddInversions = false;
+        for (let i = 0; i < 9; i++) {
+            if (tiles[i] == 0) {
+                continue;
+            }
+            for (let j = i + 1; j < 9; j++) {
+                if (tiles[j] == 0) {
+                    continue;
+                }
+                if (tiles[i] > tiles[j]) {
+                    oddInversions = !oddInversions;
+                }
+            }
+        }
+        State.IS_ODD = oddInversions;
+        State.GOAL = goal;
+        State.COORDINATE_MAP.clear();
+        for (let i = 0; i < 9; i++) {
+            State.COORDINATE_MAP.set(tiles[i], { x: Math.floor(i / 3), y: i % 3 });
+        }
+    }
 
     /**
      * Khởi tạo trạng thái mới. Nếu không có tham số, sẽ tạo trạng thái mặc định (trạng thái đích).
@@ -36,7 +80,7 @@ export default class State {
      */
     public constructor(state?: State) {
         if (state == undefined) {
-            this.tiles = 123804765;
+            this.tiles = State.GOAL;
             this.emptyTile = { ...State.COORDINATE_MAP.get(0)! };
             this.euclideanH = 0;
             this.manhattanH = 0;
@@ -217,7 +261,7 @@ export default class State {
                 return false;
             }
         }
-        let inversions = 0;
+        let oddInversions = false;
         for (let i = 0; i < 9; i++) {
             if (tiles[i] == 0) {
                 continue;
@@ -227,11 +271,11 @@ export default class State {
                     continue;
                 }
                 if (tiles[i] > tiles[j]) {
-                    inversions++;
+                    oddInversions = !oddInversions;
                 }
             }
         }
-        return inversions % 2 != 0;
+        return oddInversions == State.IS_ODD;
     }
 
     /**
