@@ -1,10 +1,9 @@
-import React from "react"
 import "../styles/result.css"
 
 type Result = {
   algorithm: string
   depth: number
-  expandedNodes: number
+  visitCount: number
   time: number
 }
 
@@ -28,11 +27,11 @@ function ResultPanel({ result }: ResultPanelProps) {
       </p>
 
       <p>
-        <strong>Số nút mở rộng:</strong> {result.expandedNodes}
+        <strong>Số lần duyệt trạng thái:</strong> {result.visitCount}
       </p>
 
       <p>
-        <strong>Thời gian:</strong> {result.time}s
+        <strong>Thời gian:</strong> {result.time}ms
       </p>
     </div>
   )

@@ -4,37 +4,57 @@ import ResultPanel from "./ResultPanel"
 import SolutionViewer from "./SolutionViewer"
 import State from "../../../models/State"
 import solveWithDFS from "../../../solvers/DFS"
+import solveWithIDDFS from "../../../solvers/IDDFS"
 import "../styles/control.css"
+import type Solution from "../../../models/Solution"
 
 type Board = number[][]
 
 type Result = {
   algorithm: string
   depth: number
-  expandedNodes: number
+  visitCount: number
   time: number
   steps: number[][][]
 }
 
-const DEFAULT_INITIAL: Board = [[1,2,3],[4,0,5],[7,8,6]]
-const DEFAULT_GOAL: Board    = [[1,2,3],[4,5,6],[7,8,0]]
+type Limit = {
+  name: string
+  value: number
+}
+
+const DEFAULT_INITIAL: Board = [[1, 2, 3], [8, 0, 4], [7, 6, 5]]
+const DEFAULT_GOAL: Board = [[1, 2, 3], [8, 0, 4], [7, 6, 5]]
 
 export default function ControlPanel() {
+  const ALGORITHMS = ["Breadth-First Search", "Depth-First Search", "Iterative Deepening Depth-First Search", "A-star"]
+  const DEFAULT_LIMITS = new Map<string, Limit>([
+    ["Breadth-First Search", { name: "Số trạng thái duyệt tối đa", value: 200000 }],
+    ["Depth-First Search", { name: "Độ sâu tối đa", value: 50 }],
+    ["Iterative Deepening Depth-First Search", { name: "Độ sâu tối đa", value: 50 }],
+    ["A-star", { name: "Số trạng thái duyệt tối đa", value: 200000 }]
+  ])
+  const [limit, setLimit] = useState<Limit>(DEFAULT_LIMITS.get(ALGORITHMS[0])!)
   const [initialBoard, setInitialBoard] = useState<Board>(DEFAULT_INITIAL)
-  const [goalBoard,    setGoalBoard]    = useState<Board>(DEFAULT_GOAL)
-  const [algorithm,    setAlgorithm]    = useState<string>("dfs")
-  const [result,       setResult]       = useState<Result | null>(null)
-  const [error,        setError]        = useState<string | null>(null)
+  const [goalBoard, setGoalBoard] = useState<Board>(DEFAULT_GOAL)
+  const [algorithm, setAlgorithm] = useState<string>("Breadth-First Search")
+  const [result, setResult] = useState<Result | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   const updateCell =
     (setter: React.Dispatch<React.SetStateAction<Board>>) =>
-    (row: number, col: number, value: number | "") => {
-      setter(prev => {
-        const next = prev.map(r => [...r])
-        next[row][col] = value === "" ? 0 : Number(value)
-        return next
-      })
-    }
+      (row: number, col: number, value: number | "") => {
+        setter(prev => {
+          const next = prev.map(r => [...r])
+          next[row][col] = value === "" ? 0 : Number(value)
+          return next
+        })
+      }
+
+  const changeAlgorithm = (algo: string) => {
+    setAlgorithm(algo)
+    setLimit(DEFAULT_LIMITS.get(algo)!)
+  }
 
   const handleSolve = () => {
     setError(null)
@@ -55,9 +75,26 @@ export default function ControlPanel() {
         return
       }
 
-      const solution = solveWithDFS(startState)
+      let solution: Solution | null = null
 
-      if (!solution.tree) {
+      switch (algorithm) {
+        case "Breadth-First Search":
+          //solution = solveWithBFS(startState)
+          setError("Chưa triển khai")
+          return
+        case "Depth-First Search":
+          solution = solveWithDFS(startState, limit.value)
+          break
+        case "Iterative Deepening Depth-First Search":
+          solution = solveWithIDDFS(startState, limit.value)
+          break
+        case "A-star":
+          //solution = solveWithAStar(startState)
+          setError("Chưa triển khai")
+          return
+      }
+
+      if (!solution || !solution.tree) {
         setError("Không tìm được lời giải (vượt quá độ sâu giới hạn).")
         return
       }
@@ -68,9 +105,9 @@ export default function ControlPanel() {
 
       setResult({
         algorithm,
-        depth:         solution.tree.getDepth(),
-        expandedNodes: solution.visitCount,
-        time:          solution.timeTaken,
+        depth: solution.tree.getDepth(),
+        visitCount: solution.visitCount,
+        time: solution.timeTaken,
         steps,
       })
     } catch (e) {
@@ -100,10 +137,25 @@ export default function ControlPanel() {
         <select
           id="algo-select"
           value={algorithm}
-          onChange={(e) => setAlgorithm(e.target.value)}
+          onChange={(e) => changeAlgorithm(e.target.value)}
         >
-          <option value="dfs">DFS</option>
+          {ALGORITHMS.map((algo) => (
+            <option key={algo} value={algo}>
+              {algo}
+            </option>
+          ))}
         </select>
+      </div>
+
+      <div className="control-row">
+        <label htmlFor="limit-input">{limit.name}:</label>
+        <input
+          id="limit-input"
+          type="number"
+          min="0"
+          value={limit.value}
+          onChange={(e) => setLimit({ ...limit, value: Number(e.target.value) })}
+        />
       </div>
 
       <div className="button-row">
@@ -112,7 +164,7 @@ export default function ControlPanel() {
         </button>
       </div>
 
-      {error  && <p className="error-msg">{error}</p>}
+      {error && <p className="error-msg">{error}</p>}
       {result && <ResultPanel result={result} />}
       {result && <SolutionViewer steps={result.steps} />}
     </div>

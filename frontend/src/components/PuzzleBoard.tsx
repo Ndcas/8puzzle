@@ -1,4 +1,3 @@
-import React from "react"
 import "../styles/board.css"
 
 type Board = number[][]
@@ -14,8 +13,8 @@ function PuzzleBoard({ title, board, onCellChange, editable = false }: PuzzleBoa
 
   const defaultBoard: Board = [
     [1, 2, 3],
-    [4, 0, 6],
-    [7, 5, 8]
+    [8, 0, 4],
+    [7, 6, 5]
   ]
 
   const displayBoard: Board = board || defaultBoard
