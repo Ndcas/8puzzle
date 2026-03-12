@@ -25,21 +25,22 @@ type Limit = {
 
 const DEFAULT_INITIAL: Board = [[1, 2, 3], [8, 0, 4], [7, 6, 5]]
 const DEFAULT_GOAL: Board = [[1, 2, 3], [8, 0, 4], [7, 6, 5]]
+const ALGORITHMS = ["Breadth-First Search", "Depth-First Search", "Iterative Deepening Depth-First Search", "A-star"]
+const DEFAULT_LIMITS = new Map<string, Limit>([
+  ["Breadth-First Search", { name: "Số trạng thái duyệt tối đa", value: 200000 }],
+  ["Depth-First Search", { name: "Độ sâu tối đa", value: 50 }],
+  ["Iterative Deepening Depth-First Search", { name: "Độ sâu tối đa", value: 50 }],
+  ["A-star", { name: "Số trạng thái duyệt tối đa", value: 200000 }]
+])
 
 export default function ControlPanel() {
-  const ALGORITHMS = ["Breadth-First Search", "Depth-First Search", "Iterative Deepening Depth-First Search", "A-star"]
-  const DEFAULT_LIMITS = new Map<string, Limit>([
-    ["Breadth-First Search", { name: "Số trạng thái duyệt tối đa", value: 200000 }],
-    ["Depth-First Search", { name: "Độ sâu tối đa", value: 50 }],
-    ["Iterative Deepening Depth-First Search", { name: "Độ sâu tối đa", value: 50 }],
-    ["A-star", { name: "Số trạng thái duyệt tối đa", value: 200000 }]
-  ])
   const [limit, setLimit] = useState<Limit>(DEFAULT_LIMITS.get(ALGORITHMS[0])!)
   const [initialBoard, setInitialBoard] = useState<Board>(DEFAULT_INITIAL)
   const [goalBoard, setGoalBoard] = useState<Board>(DEFAULT_GOAL)
   const [algorithm, setAlgorithm] = useState<string>("Breadth-First Search")
   const [result, setResult] = useState<Result | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [isSolving, setIsSolving] = useState<boolean>(false)
 
   const updateCell =
     (setter: React.Dispatch<React.SetStateAction<Board>>) =>
@@ -56,9 +57,13 @@ export default function ControlPanel() {
     setLimit(DEFAULT_LIMITS.get(algo)!)
   }
 
-  const handleSolve = () => {
+  const handleSolve = async () => {
     setError(null)
     setResult(null)
+    setIsSolving(true)
+
+    await new Promise<void>(resolve => setTimeout(resolve, 0))
+
     try {
       const flatGoal = goalBoard.flat()
       const goalNumber = flatGoal.reduce((acc, val) => acc * 10 + val, 0)
@@ -95,7 +100,7 @@ export default function ControlPanel() {
       }
 
       if (!solution || !solution.tree) {
-        setError("Không tìm được lời giải (vượt quá độ sâu giới hạn).")
+        setError("Không tìm được lời giải, hãy thử tăng tham số giới hạn.")
         return
       }
 
@@ -112,6 +117,8 @@ export default function ControlPanel() {
       })
     } catch (e) {
       setError(e instanceof Error ? e.message : "Lỗi không xác định")
+    } finally {
+      setIsSolving(false)
     }
   }
 
@@ -159,14 +166,22 @@ export default function ControlPanel() {
       </div>
 
       <div className="button-row">
-        <button className="btn btn-primary" onClick={handleSolve}>
+        <button className="btn btn-primary" onClick={handleSolve} disabled={isSolving}>
           Giải Puzzle
         </button>
       </div>
 
-      {error && <p className="error-msg">{error}</p>}
-      {result && <ResultPanel result={result} />}
-      {result && <SolutionViewer steps={result.steps} />}
+      {isSolving ? (
+        <div className="solving-indicator">
+          <span>Đang giải...</span>
+        </div>
+      ) : (
+        <>
+          {error && <p className="error-msg">{error}</p>}
+          {result && <ResultPanel result={result} />}
+          {result && <SolutionViewer steps={result.steps} />}
+        </>
+      )}
     </div>
   )
 }

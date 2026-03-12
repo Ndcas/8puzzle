@@ -13,39 +13,36 @@ export default function solveWithDFS(
   }
 
   const root = new Tree(null, startingState, null);
-  const result = dfs(root, Math.max(0, maxDepth));
+  let visitCount = 0;
 
-  return new Solution(result.node, result.visitCount, Date.now() - startTime);
-}
+  const MOVES = [OpCodes.Up, OpCodes.Down, OpCodes.Left, OpCodes.Right];
 
-interface DFSResult {
-  node: Tree | null;
-  visitCount: number;
-}
+  const stack: { node: Tree; limit: number }[] = [
+    { node: root, limit: Math.max(0, maxDepth) }
+  ];
 
-const MOVES = [OpCodes.Up, OpCodes.Down, OpCodes.Left, OpCodes.Right] as const;
+  while (stack.length > 0) {
+    const { node, limit } = stack.pop()!;
+    visitCount++;
 
-function dfs(node: Tree, limit: number): DFSResult {
-  let currentVisitCount = 1;
-  const currentState = node.getState();
+    const currentState = node.getState();
+    if (currentState.isFinish()) {
+      return new Solution(node, visitCount, Date.now() - startTime);
+    }
 
-  if (currentState.isFinish()) return { node, visitCount: currentVisitCount };
-  if (limit <= 0)              return { node: null, visitCount: currentVisitCount };
+    if (limit > 0) {
+      for (const op of MOVES) {
+        const nextState = new State(currentState);
+        nextState.move(op);
 
-  for (const op of MOVES) {
-    const nextState = new State(currentState);
-    nextState.move(op);
+        if (nextState.equals(currentState)) continue;
+        if (node.isTraversedState(nextState)) continue;
 
-    if (nextState.equals(currentState))   continue;
-    if (node.isTraversedState(nextState)) continue;
-
-    const nextNode = new Tree(node, nextState, op);
-    const result   = dfs(nextNode, limit - 1);
-
-    currentVisitCount += result.visitCount;
-
-    if (result.node) return { node: result.node, visitCount: currentVisitCount };
+        const nextNode = new Tree(node, nextState, op);
+        stack.push({ node: nextNode, limit: limit - 1 });
+      }
+    }
   }
 
-  return { node: null, visitCount: currentVisitCount };
+  return new Solution(null, visitCount, Date.now() - startTime);
 }

@@ -8,7 +8,7 @@
   background: #ffffff;
   border-radius: 16px;
   border-top: 4px solid var(--blue-main);
-  box-shadow: 0 4px 24px rgba(26,58,107,0.10);
+  box-shadow: 0 4px 24px rgba(26, 58, 107, 0.10);
 }
 
 /* Two boards side by side */
@@ -52,7 +52,7 @@
 
 .control-row select:focus {
   border-color: var(--blue-main);
-  box-shadow: 0 0 0 3px rgba(31,92,169,0.12);
+  box-shadow: 0 0 0 3px rgba(31, 92, 169, 0.12);
 }
 
 /* Buttons */
@@ -64,6 +64,9 @@
 }
 
 .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   padding: 10px 26px;
   border: 1.5px solid var(--blue-main);
   border-radius: 8px;
@@ -87,15 +90,36 @@
   background: linear-gradient(118deg, var(--blue-dark), var(--blue-main));
   color: var(--white);
   border-color: transparent;
-  box-shadow: 0 3px 10px rgba(31,92,169,0.25);
+  box-shadow: 0 3px 10px rgba(31, 92, 169, 0.25);
 }
 
 .btn.btn-primary:hover {
   background: linear-gradient(118deg, var(--blue-main), #1870c8);
-  box-shadow: 0 4px 14px rgba(31,92,169,0.35);
+  box-shadow: 0 4px 14px rgba(31, 92, 169, 0.35);
 }
 
 @media (max-width: 620px) {
-  .control-panel { padding: 18px 16px; gap: 16px; }
-  .boards-row    { gap: 20px; }
+  .control-panel {
+    padding: 18px 16px;
+    gap: 16px;
+  }
+
+  .boards-row {
+    gap: 20px;
+  }
+}
+
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.72;
+}
+
+.solving-indicator {
+  padding: 16px 0 8px;
+  color: var(--blue-main);
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
 }

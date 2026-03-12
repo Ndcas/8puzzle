@@ -37,51 +37,43 @@ export default function solveWithIDDFS(startingState: State, maxDepth: number = 
 }
 
 /**
- * Hàm Tìm kiếm giới hạn độ sâu (Depth-Limited Search - DLS).
+ * Hàm Tìm kiếm giới hạn độ sâu (Depth-Limited Search - DLS) sử dụng vòng lặp và Stack.
  * 
- * Thực hiện tìm kiếm theo chiều sâu nhưng chỉ đến một mức độ sâu nhất định.
- * 
- * @param node Nút hiện tại trong cây tìm kiếm.
- * @param limit Giới hạn độ sâu còn lại.
- * @returns Object chứa nút đích (nếu tìm thấy) và số lượng trạng thái đã duyệt trong lần gọi này.
+ * @param root Nút gốc cho lần tìm kiếm này.
+ * @param limit Giới hạn độ sâu tối đa cho lần tìm kiếm này.
+ * @returns Object chứa nút đích (nếu tìm thấy) và tổng số trạng thái đã duyệt.
  */
-function depthLimitedSearch(node: Tree, limit: number): DLSResult {
-    let currentVisitCount = 1;
-    let currentState = node.getState();
-    if (currentState.isFinish()) {
-        return {
-            node: node,
-            visitCount: currentVisitCount
-        };
-    }
-    if (limit <= 0) {
-        return {
-            node: null,
-            visitCount: currentVisitCount
-        };
-    }
-    let moves = [OpCodes.Up, OpCodes.Down, OpCodes.Left, OpCodes.Right];
-    for (let op of moves) {
-        let nextState = new State(currentState);
-        nextState.move(op);
-        if (nextState.equals(currentState)) {
-            continue;
-        }
-        if (node.isTraversedState(nextState)) {
-            continue;
-        }
-        let nextNode = new Tree(node, nextState, op);
-        let result = depthLimitedSearch(nextNode, limit - 1);
-        currentVisitCount += result.visitCount;
-        if (result.node) {
+function depthLimitedSearch(root: Tree, limit: number): DLSResult {
+    let visitCount = 0;
+    let stack: { node: Tree; currentLimit: number }[] = [{ node: root, currentLimit: limit }];
+    while (stack.length > 0) {
+        let { node, currentLimit } = stack.pop()!;
+        visitCount++;
+        let currentState = node.getState();
+        if (currentState.isFinish()) {
             return {
-                node: result.node,
-                visitCount: currentVisitCount
+                node: node,
+                visitCount: visitCount
             };
+        }
+        if (currentLimit > 0) {
+            let moves = [OpCodes.Up, OpCodes.Down, OpCodes.Left, OpCodes.Right];
+            for (let op of moves) {
+                let nextState = new State(currentState);
+                nextState.move(op);
+                if (nextState.equals(currentState)) {
+                    continue;
+                }
+                if (node.isTraversedState(nextState)) {
+                    continue;
+                }
+                let nextNode = new Tree(node, nextState, op);
+                stack.push({ node: nextNode, currentLimit: currentLimit - 1 });
+            }
         }
     }
     return {
         node: null,
-        visitCount: currentVisitCount
+        visitCount: visitCount
     };
 }
