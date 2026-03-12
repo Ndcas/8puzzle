@@ -5,6 +5,8 @@ import SolutionViewer from "./SolutionViewer"
 import State from "../../../models/State"
 import solveWithDFS from "../../../solvers/DFS"
 import solveWithIDDFS from "../../../solvers/IDDFS"
+import solveWithBFS from "../../../solvers/BFS"
+import solveWithAStar from "../../../solvers/AStar"
 import "../styles/control.css"
 import type Solution from "../../../models/Solution"
 
@@ -25,12 +27,12 @@ type Limit = {
 
 const DEFAULT_INITIAL: Board = [[1, 2, 3], [8, 0, 4], [7, 6, 5]]
 const DEFAULT_GOAL: Board = [[1, 2, 3], [8, 0, 4], [7, 6, 5]]
-const ALGORITHMS = ["Breadth-First Search", "Depth-First Search", "Iterative Deepening Depth-First Search", "A-star"]
+const ALGORITHMS = ["Breadth-First Search", "Depth-First Search", "Iterative Deepening Search", "A-star"]
 const DEFAULT_LIMITS = new Map<string, Limit>([
-  ["Breadth-First Search", { name: "Số trạng thái duyệt tối đa", value: 200000 }],
-  ["Depth-First Search", { name: "Độ sâu tối đa", value: 50 }],
-  ["Iterative Deepening Depth-First Search", { name: "Độ sâu tối đa", value: 50 }],
-  ["A-star", { name: "Số trạng thái duyệt tối đa", value: 200000 }]
+  ["Breadth-First Search", { name: "Số trạng thái duyệt tối đa", value: 20000 }],
+  ["Depth-First Search", { name: "Độ sâu tối đa", value: 20 }],
+  ["Iterative Deepening Search", { name: "Độ sâu tối đa", value: 20 }],
+  ["A-star", { name: "Số trạng thái duyệt tối đa", value: 20000 }]
 ])
 
 export default function ControlPanel() {
@@ -84,19 +86,17 @@ export default function ControlPanel() {
 
       switch (algorithm) {
         case "Breadth-First Search":
-          //solution = solveWithBFS(startState)
-          setError("Chưa triển khai")
-          return
+          solution = solveWithBFS(startState, limit.value)
+          break
         case "Depth-First Search":
           solution = solveWithDFS(startState, limit.value)
           break
-        case "Iterative Deepening Depth-First Search":
+        case "Iterative Deepening Search":
           solution = solveWithIDDFS(startState, limit.value)
           break
         case "A-star":
-          //solution = solveWithAStar(startState)
-          setError("Chưa triển khai")
-          return
+          solution = solveWithAStar(startState, limit.value)
+          break
       }
 
       if (!solution || !solution.tree) {

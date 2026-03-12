@@ -18,21 +18,21 @@ interface DLSResult {
  * @returns Đối tượng Solution chứa kết quả tìm kiếm, tổng số lượt duyệt và thời gian thực thi.
  */
 export default function solveWithIDDFS(startingState: State, maxDepth: number = 50): Solution {
-    let startTime = Date.now();
+    const startTime = Date.now();
     let totalVisitCount = 0;
     if (!startingState.isSolvable()) {
         return new Solution(null, 0, Date.now() - startTime);
     }
     for (let limit = 0; limit <= maxDepth; limit++) {
-        let root = new Tree(null, startingState, null);
-        let result = depthLimitedSearch(root, limit);
+        const root = new Tree(null, startingState, null);
+        const result = depthLimitedSearch(root, limit);
         totalVisitCount += result.visitCount;
         if (result.node) {
-            let timeTaken = Date.now() - startTime;
+            const timeTaken = Date.now() - startTime;
             return new Solution(result.node, totalVisitCount, timeTaken);
         }
     }
-    let timeTaken = Date.now() - startTime;
+    const timeTaken = Date.now() - startTime;
     return new Solution(null, totalVisitCount, timeTaken);
 }
 
@@ -45,11 +45,11 @@ export default function solveWithIDDFS(startingState: State, maxDepth: number = 
  */
 function depthLimitedSearch(root: Tree, limit: number): DLSResult {
     let visitCount = 0;
-    let stack: { node: Tree; currentLimit: number }[] = [{ node: root, currentLimit: limit }];
+    const stack: { node: Tree; currentLimit: number }[] = [{ node: root, currentLimit: limit }];
     while (stack.length > 0) {
-        let { node, currentLimit } = stack.pop()!;
+        const { node, currentLimit } = stack.pop()!;
         visitCount++;
-        let currentState = node.getState();
+        const currentState = node.getState();
         if (currentState.isFinish()) {
             return {
                 node: node,
@@ -57,9 +57,9 @@ function depthLimitedSearch(root: Tree, limit: number): DLSResult {
             };
         }
         if (currentLimit > 0) {
-            let moves = [OpCodes.Up, OpCodes.Down, OpCodes.Left, OpCodes.Right];
-            for (let op of moves) {
-                let nextState = new State(currentState);
+            const moves = [OpCodes.Up, OpCodes.Down, OpCodes.Left, OpCodes.Right];
+            for (const op of moves) {
+                const nextState = new State(currentState);
                 nextState.move(op);
                 if (nextState.equals(currentState)) {
                     continue;
@@ -67,7 +67,7 @@ function depthLimitedSearch(root: Tree, limit: number): DLSResult {
                 if (node.isTraversedState(nextState)) {
                     continue;
                 }
-                let nextNode = new Tree(node, nextState, op);
+                const nextNode = new Tree(node, nextState, op);
                 stack.push({ node: nextNode, currentLimit: currentLimit - 1 });
             }
         }
