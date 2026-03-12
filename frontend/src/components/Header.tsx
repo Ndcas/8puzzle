@@ -1,5 +1,4 @@
-import React from 'react';
-import '../styles/header.css'; 
+import '../styles/header.css';
 
 const CTU_LOGO = 'https://www.ctu.edu.vn/images/upload/logo.png';
 

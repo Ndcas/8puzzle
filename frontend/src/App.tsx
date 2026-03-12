@@ -1,4 +1,3 @@
-import React from "react"
 import Header from "./components/Header"
 import ControlPanel from "./components/ControlPanel"
 import "./styles/global.css"
