@@ -45,9 +45,9 @@ export default function solveWithIDDFS(startingState: State, maxDepth: number = 
  */
 function depthLimitedSearch(root: Tree, limit: number): DLSResult {
     let visitCount = 0;
-    const stack: { node: Tree; currentLimit: number }[] = [{ node: root, currentLimit: limit }];
+    const stack = [root];
     while (stack.length > 0) {
-        const { node, currentLimit } = stack.pop()!;
+        const node = stack.pop()!;
         visitCount++;
         const currentState = node.getState();
         if (currentState.isFinish()) {
@@ -56,7 +56,7 @@ function depthLimitedSearch(root: Tree, limit: number): DLSResult {
                 visitCount: visitCount
             };
         }
-        if (currentLimit > 0) {
+        if (node.getDepth() < limit) {
             const moves = [OpCodes.Up, OpCodes.Down, OpCodes.Left, OpCodes.Right];
             for (const op of moves) {
                 const nextState = new State(currentState);
@@ -68,7 +68,7 @@ function depthLimitedSearch(root: Tree, limit: number): DLSResult {
                     continue;
                 }
                 const nextNode = new Tree(node, nextState, op);
-                stack.push({ node: nextNode, currentLimit: currentLimit - 1 });
+                stack.push(nextNode);
             }
         }
     }

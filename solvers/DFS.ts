@@ -17,12 +17,10 @@ export default function solveWithDFS(
 
   const MOVES = [OpCodes.Up, OpCodes.Down, OpCodes.Left, OpCodes.Right];
 
-  const stack: { node: Tree; limit: number }[] = [
-    { node: root, limit: Math.max(0, maxDepth) }
-  ];
+  const stack = [root];
 
   while (stack.length > 0) {
-    const { node, limit } = stack.pop()!;
+    const node = stack.pop()!;
     visitCount++;
 
     const currentState = node.getState();
@@ -30,7 +28,7 @@ export default function solveWithDFS(
       return new Solution(node, visitCount, Date.now() - startTime);
     }
 
-    if (limit > 0) {
+    if (node.getDepth() < maxDepth) {
       for (const op of MOVES) {
         const nextState = new State(currentState);
         nextState.move(op);
@@ -39,7 +37,7 @@ export default function solveWithDFS(
         if (node.isTraversedState(nextState)) continue;
 
         const nextNode = new Tree(node, nextState, op);
-        stack.push({ node: nextNode, limit: limit - 1 });
+        stack.push(nextNode);
       }
     }
   }
